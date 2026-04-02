@@ -36,4 +36,4 @@ To bridge this gap, we introduce the first large-scale **Chain-of-Emotion (CoE)*
 * `eval/`: Contains testing inference codes, evaluation scripts, and experimental results.
 
 ## 📝 License
-To be updated...
+The dataset and code in this repository are released under the BSD 2-Clause License.
