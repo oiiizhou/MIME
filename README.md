@@ -6,7 +6,7 @@ This repository contains the official introduction and codes implementation for 
 
 <p align="center">
   <a href="https://yuxinokk.github.io/MIME/"><b>[HomePage]</b></a> ⋅ 
-  <a href="#mime-dataset"><b>[Dataset]</b></a> ⋅
+  <a href="https://drive.google.com/drive/folders/1RgBzBK7UJMWL43hEPQzmZTJtSI7TkHhe?usp=sharing"><b>[Dataset]</b></a> ⋅
   <a href="./license.pdf"><b>[License]</b></a> ⋅
   <a href="./supplementary_material.pdf"><b>[Appendix]</b></a>
 </p>
