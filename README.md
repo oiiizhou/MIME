@@ -5,8 +5,7 @@
 This repository contains the official introduction and codes implementation for the paper "**MIME: Missing Information in Multimodal Emotion**" (submitted to ACM Multimedia 2026 Dataset Track). 
 
 <p align="center">
-  <a href="#mime-dataset"><b>[Paper]</b></a> ⋅ 
-  <a href="#mime-dataset"><b>[WebPage]</b></a> ⋅ 
+  <a href="https://yuxinokk.github.io/MIME/"><b>[HomePage]</b></a> ⋅ 
   <a href="#mime-dataset"><b>[Dataset]</b></a>
 </p>
 
@@ -15,8 +14,7 @@ This repository contains the official introduction and codes implementation for 
 ## 📰 News
 * **[2026.04]** The MIME dataset repository is created for ACM Multimedia 2026. Data and codes will be fully updated by April 8, 2026.
 
-## 🛠️ Requirements
-To be updated... (Detailed environment setup and dependencies will be released soon).
+* **Availability:** Only sample data are publicly released: 4 videos per case (28 videos total). For access to the full dataset, please sign the `license.pdf` and email the signed file to `jinj62062@gmail.com` with a CC to `lanx@cse.neu.edu.cn`.
 
 ## 📊 About MIME
 
@@ -28,12 +26,13 @@ To bridge this gap, we introduce the first large-scale **Chain-of-Emotion (CoE)*
 - **Diverse Scenarios:** Built upon authoritative video benchmarks like CAER and DFEW, we systematically categorize data into five scenarios: one full-modality baseline and four specific missing-modality settings.
 - **Adaptive Data Construction Pipeline:** Leveraging large multimodal models with a conditional blurred-cue verification stage for face-degraded scenarios to prevent model hallucination.
 - **Structured Reasoning (CoE):** Annotations follow a structured three-part format (Scene Understanding, Emotion Analysis, Conclusion) to explicitly capture how alternative cues compensate for missing information.
-- **Rigorous Evaluation:** Covering seven balanced emotion categories with a rigorous test set of 400 samples per scenario.
+- **Rigorous Evaluation:** Covering seven balanced emotion categories. Note: the dataset now contains seven missing-modality cases with uneven sample counts across cases, while the seven emotion categories remain balanced.
 
 ## 📁 Repository Structure
-* `dataset/`: Contains the core dataset including `merged_data` and `merged.jsonl`.
-* `scripts/`: Contains scripts for data processing across different missing-modality cases and CoE generation via LLMs.
-* `eval/`: Contains testing inference codes, evaluation scripts, and experimental results.
+- `data/`: Contains the seven missing-modality case folders: `CASE1_FM`, `CASE2_FDM`, `CASE3_FSM`, `CASE4_VMM`, `CASE5_FDAM`, `CASE6_FSAM`, `CASE7_AMM`. Sample counts across these cases are uneven, but the seven emotion categories are balanced across the dataset.
+- `scripts/`: Scripts for data processing across different missing-modality cases and for CoE generation via LLMs.
+- `eval/`: Testing/inference code, evaluation scripts, and experimental results.
+-- `license.pdf`: Repository license file (see below).
 
 ## 📝 License
-The dataset and code in this repository are released under the BSD 2-Clause License.
+The dataset and code in this repository are released under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. See `license.pdf` for the uploaded license document.
