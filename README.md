@@ -6,7 +6,9 @@ This repository contains the official introduction and codes implementation for 
 
 <p align="center">
   <a href="https://yuxinokk.github.io/MIME/"><b>[HomePage]</b></a> ⋅ 
-  <a href="#mime-dataset"><b>[Dataset]</b></a>
+  <a href="#mime-dataset"><b>[Dataset]</b></a> ⋅
+  <a href="./license.pdf"><b>[License]</b></a> ⋅
+  <a href="./supplementary_material.pdf"><b>[Appendix]</b></a>
 </p>
 
 ---
@@ -14,7 +16,6 @@ This repository contains the official introduction and codes implementation for 
 ## 📰 News
 * **[2026.04]** The MIME dataset repository is created for ACM Multimedia 2026. Data and codes will be fully updated by April 8, 2026.
 
-* **Availability:** Only sample data are publicly released: 4 videos per case (28 videos total). For access to the full dataset, please sign the `license.pdf` and email the signed file to `jinj62062@gmail.com` with a CC to `lanx@cse.neu.edu.cn`.
 
 ## 📊 About MIME
 
@@ -29,10 +30,16 @@ To bridge this gap, we introduce the first large-scale **Chain-of-Emotion (CoE)*
 - **Rigorous Evaluation:** Covering seven balanced emotion categories. Note: the dataset now contains seven missing-modality cases with uneven sample counts across cases, while the seven emotion categories remain balanced.
 
 ## 📁 Repository Structure
-- `data/`: Contains the seven missing-modality case folders: `CASE1_FM`, `CASE2_FDM`, `CASE3_FSM`, `CASE4_VMM`, `CASE5_FDAM`, `CASE6_FSAM`, `CASE7_AMM`. Sample counts across these cases are uneven, but the seven emotion categories are balanced across the dataset.
-- `scripts/`: Scripts for data processing across different missing-modality cases and for CoE generation via LLMs.
-- `eval/`: Testing/inference code, evaluation scripts, and experimental results.
--- `license.pdf`: Repository license file (see below).
+- `data/`: Seven missing-modality case folders: `CASE1_FM`, `CASE2_FDM`, `CASE3_FSM`, `CASE4_VMM`, `CASE5_FDAM`, `CASE6_FSAM`, `CASE7_AMM`.
+- `data_list.txt`: Index of released sample files and metadata.
+- `eval/`: Evaluation and testing scripts (CoE evaluation tools and helpers).
+- `label.jsonl`: Structured CoE annotations for released samples.
+- `README.md`: This file.
+- `license.pdf`: License document for dataset access and usage.
+- `supplementary_material.pdf`: Appendix and supplementary materials.
+
+## 📦 Availability
+Only sample data are publicly released: 4 videos per case (28 videos total). For access to the full dataset, please sign the `license.pdf` and email the signed file to `jinj62062@gmail.com` with a CC to `lanx@cse.neu.edu.cn`.
 
 ## 📝 License
 The dataset and code in this repository are released under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. See `license.pdf` for the uploaded license document.
