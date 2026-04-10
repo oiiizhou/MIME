@@ -39,7 +39,7 @@ To bridge this gap, we introduce the first large-scale **Chain-of-Emotion (CoE)*
 - `supplementary_material.pdf`: Appendix and supplementary materials.
 
 ## 📦 Availability
-Only sample data are publicly released: 4 videos per case (28 videos total). For access to the full dataset, please sign the `license.pdf` and email the signed file to `jinj62062@gmail.com` with a CC to `lanx@cse.neu.edu.cn`.
+The benchmark can be accessed in two ways. To quickly view, you are welcome to directly download a small sample set containing 4 videos per case (28 videos in total). If you would like to use the full benchmark, kindly sign the `license.pdf` and send it to `jinj62062@gmail.com` (CC: `lanx@cse.neu.edu.cn`).
 
 ## 📝 License
 The dataset and code in this repository are released under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. See `license.pdf` for the uploaded license document.
