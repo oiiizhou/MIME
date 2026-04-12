@@ -30,7 +30,14 @@ To bridge this gap, we introduce the first **Chain-of-Emotion (CoE)** benchmark 
 - **Rigorous Evaluation:** Covering seven balanced emotion categories. Note: the benchmark now contains seven missing-modality subsets with uneven sample counts across subsets, while the seven emotion categories remain balanced.
 
 ## 📁 Repository Structure
-- `data/`: Seven missing-modality subset folders: `CASE1_FM`, `CASE2_FDM`, `CASE3_FSM`, `CASE4_VMM`, `CASE5_FDAM`, `CASE6_FSAM`, `CASE7_AMM`.
+- `data/`: Seven missing-modality subset folders containing the video files. Each subset systematically simulates a distinct real-world scenario of information loss:
+  - **`CASE1_FM` (Full Modality):** Intact audio-visual clips providing complete information, representing ideal, controlled environments like professional broadcasts or high-quality recordings.
+  - **`CASE2_FDM` (Face Details Missing):** Applies a light 2D Gaussian blur (k=15, σ=0) strictly within a precise facial mask. This simulates mild visual imperfections (e.g., low-resolution webcams, compression artifacts) where subtle micro-expressions are lost but the general facial layout remains perceptible.
+  - **`CASE3_FSM` (Face Structures Missing):** Applies a progressively heavier Gaussian blur (k ∈ {35, 55}, σ=0) to severely degrade facial structures, rendering the face as an unrecognizable color blob. Replicates severe real-world occlusions (e.g., heavy masks, extreme lighting failures), forcing models to deduce emotions entirely from body language and scene context.
+  - **`CASE4_VMM` (Visual Modality Missing):** Simulates an audio-only scenario where all visual frames are discarded (replaced by black frames). Mirrors everyday situations like phone calls, voice messages, or completely occluded cameras.
+  - **`CASE5_FDAM` (Face Details and Audio Modality Missing):** A dual-modality loss condition combining the light facial blur from Case 2 (k=15) and removing the audio track. Mimics highly adverse environments like distant, low-resolution, and muted CCTV surveillance.
+  - **`CASE6_FSAM` (Face Structures and Audio Modality Missing):** The most extreme visual degradation combined with audio loss. The face is heavily blurred (k ∈ {35, 55}) and audio is muted, rigorously testing the ability to infer emotions entirely from body posture and surrounding environmental dynamics.
+  - **`CASE7_AMM` (Audio Modality Missing):** Simulates a visual-only scenario by removing the audio track. Corresponds to viewing muted videos, interacting through soundproof barriers, or encountering hardware microphone failures.
 - `data_list.txt`: Index of released sample files and metadata.
 - `eval/`: Evaluation and testing scripts.
   - `predictcoe_evalacc.py`: Script to invoke the model, generate emotion labels and Chain-of-Emotion (CoE) from audio/video inputs, and evaluate hard metrics (e.g., accuracy).
