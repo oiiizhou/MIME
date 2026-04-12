@@ -2,7 +2,7 @@
 
 **MIME: The first Chain-of-Emotion (CoE) benchmark for multimodal emotion recognition under missing modalities (e.g., blurred faces). It provides structured reasoning annotations to logically deduce emotions when key cues are absent, enabling robust and interpretable Emotion AI in the wild.**
 
-This repository contains the official introduction and codes implementation for the paper "**MIME: Missing Information in Multimodal Emotion**" (submitted to ACM Multimedia 2026 Benchmark Track). 
+This repository contains the official introduction and codes implementation for the paper "**Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition**" (submitted to ACM Multimedia 2026 Benchmark Track). 
 
 <p align="center">
   <a href="https://yuxinokk.github.io/MIME/"><b>[HomePage]</b></a> ⋅ 
