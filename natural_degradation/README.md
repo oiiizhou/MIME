@@ -1,6 +1,6 @@
-# Natural Degradation Reference
+# Natural Degradation
 
-This directory contains qualitative reference clips that illustrate naturally occurring degradation already present in MIME source videos before any controlled corruption is applied.
+This directory contains qualitative clips that illustrate naturally occurring degradation already present in MIME source videos before any controlled corruption is applied.
 
 The clips are grouped by the dominant visible issue in each video:
 
@@ -20,4 +20,4 @@ Sample counts in this release:
 - `low_light_or_low_visibility`: 21 clips
 - `hand_or_body_occlusion`: 5 clips
 
-These reference clips are provided for qualitative inspection and rebuttal clarification. They are not defined as additional benchmark subsets and should not be interpreted as a separate evaluation split.
+These clips are provided for qualitative inspection and rebuttal clarification. They are not defined as additional benchmark subsets and should not be interpreted as a separate evaluation split.

@@ -42,18 +42,18 @@ To bridge this gap, we introduce a dedicated **Chain-of-Emotion (CoE)** benchmar
   - `predictcoe_evalacc.py`: Generates predicted emotion labels and CoE outputs, then computes hard metrics such as accuracy across subsets.
   - `eval_coe.py`: Uses an LLM-as-a-Judge protocol to evaluate the quality of model-generated CoE reasoning.
 - `label.jsonl`: Structured CoE annotations for released samples.
-- `natural_degradation_reference/`: Qualitative reference clips that illustrate naturally occurring degradation already present in source videos before any controlled corruption is applied. This directory is provided for rebuttal clarification and qualitative inspection only; it is **not** an additional benchmark subset.
+- `natural_degradation/`: Qualitative clips that illustrate naturally occurring degradation already present in source videos before any controlled corruption is applied. This directory is provided for rebuttal clarification and qualitative inspection only; it is **not** an additional benchmark subset.
   - `foreground_or_object_occlusion/`: 108 clips with foreground people, scene objects, or structures partially blocking the target face or body.
   - `side_facing_or_turning_away/`: 59 clips with clear side-facing poses, head turning, or incomplete frontal visibility.
   - `low_light_or_low_visibility/`: 21 clips with dark lighting, poor visibility, or severe underexposure.
   - `hand_or_body_occlusion/`: 5 clips with hands, arms, or body parts covering important facial cues.
-  - `natural_degradation_reference.csv`: Per-clip index for the released reference videos, including the English folder assignment together with the original Chinese tags and notes.
+  - `natural_degradation.csv`: Per-clip index for the released videos, including the English folder assignment together with the original Chinese tags and notes.
 - `README.md`: This file.
 - `license.pdf`: License document for benchmark access and usage.
 - `supplementary_material.pdf`: Appendix and supplementary materials.
 
-## Natural Degradation Reference
-To make the source-video realism more transparent, we additionally release a small qualitative reference collection in `natural_degradation_reference/`. These clips are grouped by their **primary naturally occurring degradation pattern** observed in the original videos, before any benchmark-side corruption is added.
+## Natural Degradation
+To make the source-video realism more transparent, we additionally release a small qualitative collection in `natural_degradation/`. These clips are grouped by their **primary naturally occurring degradation pattern** observed in the original videos, before any benchmark-side corruption is added.
 
 This release is intended to support readers and reviewers who want concrete examples of the kinds of real-world imperfections already present in MIME source data. Some clips may exhibit multiple challenging factors at once, but each clip is placed into one folder according to its dominant visible characteristic.
 
