@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import argparse
 import time
@@ -6,29 +6,29 @@ from tqdm import tqdm
 from openai import OpenAI
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# ================= 配置区 =================
+# ================= 閰嶇疆鍖?=================
 client = OpenAI(
     api_key="xxxxx",
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
     timeout=120.0
 )
 
-# 裁判模型
+# 瑁佸垽妯″瀷
 JUDGE_MODEL = "qwen3.5-plus"
 
-# 文件路径配置 (注意：GT 路径适配到 eval 文件夹)
+# 鏂囦欢璺緞閰嶇疆 (娉ㄦ剰锛欸T 璺緞閫傞厤鍒?eval 鏂囦欢澶?
 GT_JSONL = "label.jsonl"
 PRED_JSONL = "predictions_gpt-5-mini.jsonl"
 OUTPUT_EVAL_JSONL = "evaluation_gpt-5-mini.jsonl"
 
-# ==== 指标加权权重配置 ====
+# ==== 鎸囨爣鍔犳潈鏉冮噸閰嶇疆 ====
 WEIGHTS = {
     "metric1_scene": 0.4,       
     "metric2_emotion": 0.3,     
     "metric3_class": 0.3        
 }
 
-# ==== 四模态权重配置 ====
+# ==== 鍥涙ā鎬佹潈閲嶉厤缃?====
 MODALITY_WEIGHTS = {
     "face": 0.25,   
     "body": 0.25,   
@@ -46,16 +46,16 @@ def get_judge_system_prompt():
 Your task is to evaluate a Test Model's Predicted CoT against a Ground Truth (GT) CoT.
 
 Modality Availability & Strict Hallucination Rules
-The dataset has 7 Cases determining available modalities.
+The dataset has 7 Subsets determining available modalities.
 CRITICAL RULE: You must severely penalize "Modality Hallucination". If the Test Model describes details of a modality that is missing or heavily blurred, its score for that modality must be 0.
 
-Case 1 (FM): Face, Body, Scene, Audio (All available).
-Case 2 (FDM): Face (details missing but structures usable), Body, Scene, Audio.
-Case 3 (FSM): Body, Scene, Audio. (NO Face available. Score 0 if hallucinated).
-Case 4 (VMM): Audio ONLY. (NO Visuals available. Score 0 for face/body/scene if hallucinated).
-Case 5 (FDAM): Face (details missing but usable), Body, Scene. (NO Audio. Score 0 if hallucinated).
-Case 6 (FSAM): Body, Scene. (NO Face, NO Audio. Score 0 if hallucinated).
-Case 7 (AMM): Face, Body, Scene. (NO Audio. Score 0 if hallucinated).
+Subset 1 (FM): Face, Body, Scene, Audio (All available).
+Subset 2 (FDM): Face (details missing but structures usable), Body, Scene, Audio.
+Subset 3 (FSM): Body, Scene, Audio. (NO Face available. Score 0 if hallucinated).
+Subset 4 (VMM): Audio ONLY. (NO Visuals available. Score 0 for face/body/scene if hallucinated).
+Subset 5 (FDAM): Face (details missing but usable), Body, Scene. (NO Audio. Score 0 if hallucinated).
+Subset 6 (FSAM): Body, Scene. (NO Face, NO Audio. Score 0 if hallucinated).
+Subset 7 (AMM): Face, Body, Scene. (NO Audio. Score 0 if hallucinated).
 
 Evaluation Metrics (Per Modality)
 For EACH available modality, evaluate TWO aspects:
@@ -64,7 +64,7 @@ For EACH available modality, evaluate TWO aspects:
 
 Output Format
 You MUST strictly output a JSON object containing ONLY the scores. Do NOT output any explanations.
-If a modality is not available in the Case, set ALL its scores to null.
+If a modality is not available in the Subset, set ALL its scores to null.
 
 {
     "scene_understanding": {
@@ -84,7 +84,7 @@ If a modality is not available in the Case, set ALL its scores to null.
 
 def call_judge(case_id, gt_cot, pred_cot, retry_count=0):
     user_prompt = f"""### Inputs
-Case ID: {case_id}
+Subset ID: {case_id}
 Ground Truth CoT:
 {gt_cot}
 Predicted CoT:
@@ -105,18 +105,18 @@ Predicted CoT:
     except Exception as e:
         error_msg = str(e)
         if "DataInspectionFailed" in error_msg or "400" in error_msg:
-            print(f"\r🚫 触发安全拦截，放弃重试 (跳过): {error_msg[:100]}...") 
+            print(f"\r馃毇 瑙﹀彂瀹夊叏鎷︽埅锛屾斁寮冮噸璇?(璺宠繃): {error_msg[:100]}...") 
             return {"error": "DataInspectionFailed"}
 
         if retry_count < MAX_RETRIES:
-            print(f"\r⚠️ 裁判模型调用失败 (重试 {retry_count + 1}/{MAX_RETRIES}): {e}")
+            print(f"\r鈿狅笍 瑁佸垽妯″瀷璋冪敤澶辫触 (閲嶈瘯 {retry_count + 1}/{MAX_RETRIES}): {e}")
             time.sleep(RETRY_DELAY * (retry_count + 1))
             return call_judge(case_id, gt_cot, pred_cot, retry_count + 1)
         else:
             return {"error": "MaxRetriesExceeded"}
 
 def get_valid_mods(case_id):
-    """根据 Case ID 映射有效的模态"""
+    """鏍规嵁 Subset ID 鏄犲皠鏈夋晥鐨勬ā鎬?""
     mapping = {
         1: ["face", "body", "scene", "audio"],
         2: ["face", "body", "scene", "audio"],
@@ -129,10 +129,10 @@ def get_valid_mods(case_id):
     return mapping.get(int(case_id), ["face", "body", "scene", "audio"])
 
 def calculate_metrics(judge_res, true_label, pred_label, case_id):
-    """严格按照 Case 的有效模态 (valid_mods) 计算 Metric 1-4"""
+    """涓ユ牸鎸夌収 Case 鐨勬湁鏁堟ā鎬?(valid_mods) 璁＄畻 Metric 1-4"""
     valid_mods = get_valid_mods(case_id)
     
-    # 1. Metric 1: 场景理解 (仅计算有效模态)
+    # 1. Metric 1: 鍦烘櫙鐞嗚В (浠呰绠楁湁鏁堟ā鎬?
     m1_num, m1_den = 0, 0
     scene_scores = judge_res.get("scene_understanding", {})
     for mod in valid_mods:
@@ -144,7 +144,7 @@ def calculate_metrics(judge_res, true_label, pred_label, case_id):
             except: pass
     metric1_scene = (m1_num / m1_den) if m1_den > 0 else 0
 
-    # 2. Metric 2: 情感分析 (仅计算有效模态)
+    # 2. Metric 2: 鎯呮劅鍒嗘瀽 (浠呰绠楁湁鏁堟ā鎬?
     m2_num, m2_den = 0, 0
     emotion_scores = judge_res.get("emotional_analysis", {})
     for mod in valid_mods:
@@ -156,11 +156,9 @@ def calculate_metrics(judge_res, true_label, pred_label, case_id):
             except: pass
     metric2_emotion = (m2_num / m2_den) if m2_den > 0 else 0
 
-    # 3. Metric 3: 分类结果正确性
-    metric3_class = 10 if str(true_label).strip().lower() == str(pred_label).strip().lower() else 0
+    # 3. Metric 3: 鍒嗙被缁撴灉姝ｇ‘鎬?    metric3_class = 10 if str(true_label).strip().lower() == str(pred_label).strip().lower() else 0
 
-    # 4. Metric 4: 整体思维链得分
-    metric4_overall = (
+    # 4. Metric 4: 鏁翠綋鎬濈淮閾惧緱鍒?    metric4_overall = (
         metric1_scene * WEIGHTS["metric1_scene"] +
         metric2_emotion * WEIGHTS["metric2_emotion"] +
         metric3_class * WEIGHTS["metric3_class"]
@@ -191,7 +189,7 @@ def process_single_line(line, gt_dict, evaluated_vids):
     pred_cot = pred_item.get('pred_cot', '')
     if not gt_cot or not pred_cot: return None
 
-    # 获取统一的 Case ID
+    # 鑾峰彇缁熶竴鐨?Subset ID
     case_id = pred_item.get('case', 1) 
     true_label = pred_item.get('emotion', '')
     pred_label = pred_item.get('pred_label', '')
@@ -249,7 +247,7 @@ def main():
                         valid_count += 1
                 except: pass
 
-    print(f"🚀 Starting evaluation using Judge: {JUDGE_MODEL} (Workers: {args.workers})")
+    print(f"馃殌 Starting evaluation using Judge: {JUDGE_MODEL} (Workers: {args.workers})")
 
     with open(args.out_file, 'a', encoding='utf-8') as out_f, \
          open("error_samples_log_gpt-5-mini.jsonl", 'a', encoding='utf-8') as err_f:
