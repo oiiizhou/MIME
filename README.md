@@ -21,6 +21,12 @@ This repository contains the official introduction and code implementation for t
   <a href="./supplementary_material.pdf"><b>[Appendix]</b></a>
 </p>
 
+<p align="center">
+  <img src="assets/fig_pipeline.jpg" alt="MIME overview: seven incomplete-modality subsets, the CoE generation pipeline, and the evaluation suite" width="95%">
+</p>
+
+<p align="center"><sub><b>Overview of MIME.</b> <b>Top:</b> the seven incomplete-modality subsets and the three-part Chain-of-Emotion (CoE) prompt. <b>Middle:</b> the dataset construction pipeline, where samples passing ground-truth quality filtering go through multimodal cue extraction and remained-cue verification before the structured CoE generation. <b>Bottom:</b> the evaluation suite, which aggregates Context Perception (CPS), Affective Inference (AIS) and Label Consistency (LCS) into a Holistic CoE Index, validated against human judgments.</sub></p>
+
 ---
 
 ## News
@@ -59,6 +65,7 @@ To bridge this gap, we introduce a dedicated **Chain-of-Emotion (CoE)** benchmar
   - `low_light_or_low_visibility/`: 21 clips with dark lighting, poor visibility, or severe underexposure.
   - `hand_or_body_occlusion/`: 5 clips with hands, arms, or body parts covering important facial cues.
   - `natural_degradation.csv`: Per-clip index for the released videos, including the English folder assignment together with the original Chinese tags and notes.
+- `assets/`: Figures used in this README.
 - `README.md`: This file.
 - `license.pdf`: License document for benchmark access and usage.
 - `supplementary_material.pdf`: Appendix and supplementary materials.
