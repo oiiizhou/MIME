@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import argparse
 import time
@@ -6,29 +6,29 @@ from tqdm import tqdm
 from openai import OpenAI
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# ================= 閰嶇疆鍖?=================
+# ================= configuration =================
 client = OpenAI(
-    api_key="xxxxx",
+    api_key=os.getenv("DASHSCOPE_API_KEY", "your-key-here"),
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
     timeout=120.0
 )
 
-# 瑁佸垽妯″瀷
+# Judge model
 JUDGE_MODEL = "qwen3.5-plus"
 
-# 鏂囦欢璺緞閰嶇疆 (娉ㄦ剰锛欸T 璺緞閫傞厤鍒?eval 鏂囦欢澶?
+# File paths (GT path resolves to the repository root)
 GT_JSONL = "label.jsonl"
 PRED_JSONL = "predictions_gpt-5-mini.jsonl"
 OUTPUT_EVAL_JSONL = "evaluation_gpt-5-mini.jsonl"
 
-# ==== 鎸囨爣鍔犳潈鏉冮噸閰嶇疆 ====
+# ==== HCI weights ====
 WEIGHTS = {
     "metric1_scene": 0.4,       
     "metric2_emotion": 0.3,     
     "metric3_class": 0.3        
 }
 
-# ==== 鍥涙ā鎬佹潈閲嶉厤缃?====
+# ==== per-modality weights ====
 MODALITY_WEIGHTS = {
     "face": 0.25,   
     "body": 0.25,   
@@ -105,18 +105,18 @@ Predicted CoT:
     except Exception as e:
         error_msg = str(e)
         if "DataInspectionFailed" in error_msg or "400" in error_msg:
-            print(f"\r馃毇 瑙﹀彂瀹夊叏鎷︽埅锛屾斁寮冮噸璇?(璺宠繃): {error_msg[:100]}...") 
+            print(f"\r[SKIP] safety block, giving up on this sample: {error_msg[:100]}...")
             return {"error": "DataInspectionFailed"}
 
         if retry_count < MAX_RETRIES:
-            print(f"\r鈿狅笍 瑁佸垽妯″瀷璋冪敤澶辫触 (閲嶈瘯 {retry_count + 1}/{MAX_RETRIES}): {e}")
+            print(f"\r[WARN] judge call failed (retry {retry_count + 1}/{MAX_RETRIES}): {e}")
             time.sleep(RETRY_DELAY * (retry_count + 1))
             return call_judge(case_id, gt_cot, pred_cot, retry_count + 1)
         else:
             return {"error": "MaxRetriesExceeded"}
 
 def get_valid_mods(case_id):
-    """鏍规嵁 Subset ID 鏄犲皠鏈夋晥鐨勬ā鎬?""
+    """Map the subset id to the modalities that are still valid."""
     mapping = {
         1: ["face", "body", "scene", "audio"],
         2: ["face", "body", "scene", "audio"],
@@ -129,10 +129,10 @@ def get_valid_mods(case_id):
     return mapping.get(int(case_id), ["face", "body", "scene", "audio"])
 
 def calculate_metrics(judge_res, true_label, pred_label, case_id):
-    """涓ユ牸鎸夌収 Case 鐨勬湁鏁堟ā鎬?(valid_mods) 璁＄畻 Metric 1-4"""
+    """Compute Metric 1-4 strictly over the valid modalities of a case."""
     valid_mods = get_valid_mods(case_id)
     
-    # 1. Metric 1: 鍦烘櫙鐞嗚В (浠呰绠楁湁鏁堟ā鎬?
+    # 1. Metric 1: context perception (valid modalities only)
     m1_num, m1_den = 0, 0
     scene_scores = judge_res.get("scene_understanding", {})
     for mod in valid_mods:
@@ -144,7 +144,7 @@ def calculate_metrics(judge_res, true_label, pred_label, case_id):
             except: pass
     metric1_scene = (m1_num / m1_den) if m1_den > 0 else 0
 
-    # 2. Metric 2: 鎯呮劅鍒嗘瀽 (浠呰绠楁湁鏁堟ā鎬?
+    # 2. Metric 2: affective inference (valid modalities only)
     m2_num, m2_den = 0, 0
     emotion_scores = judge_res.get("emotional_analysis", {})
     for mod in valid_mods:
@@ -156,9 +156,11 @@ def calculate_metrics(judge_res, true_label, pred_label, case_id):
             except: pass
     metric2_emotion = (m2_num / m2_den) if m2_den > 0 else 0
 
-    # 3. Metric 3: 鍒嗙被缁撴灉姝ｇ‘鎬?    metric3_class = 10 if str(true_label).strip().lower() == str(pred_label).strip().lower() else 0
+    # 3. Metric 3: label consistency
+    metric3_class = 10 if str(true_label).strip().lower() == str(pred_label).strip().lower() else 0
 
-    # 4. Metric 4: 鏁翠綋鎬濈淮閾惧緱鍒?    metric4_overall = (
+    # 4. Metric 4: holistic CoE index
+    metric4_overall = (
         metric1_scene * WEIGHTS["metric1_scene"] +
         metric2_emotion * WEIGHTS["metric2_emotion"] +
         metric3_class * WEIGHTS["metric3_class"]
@@ -189,7 +191,7 @@ def process_single_line(line, gt_dict, evaluated_vids):
     pred_cot = pred_item.get('pred_cot', '')
     if not gt_cot or not pred_cot: return None
 
-    # 鑾峰彇缁熶竴鐨?Subset ID
+    # Unified subset id
     case_id = pred_item.get('case', 1) 
     true_label = pred_item.get('emotion', '')
     pred_label = pred_item.get('pred_label', '')
@@ -247,7 +249,7 @@ def main():
                         valid_count += 1
                 except: pass
 
-    print(f"馃殌 Starting evaluation using Judge: {JUDGE_MODEL} (Workers: {args.workers})")
+    print(f"[RUN] Starting evaluation using Judge: {JUDGE_MODEL} (Workers: {args.workers})")
 
     with open(args.out_file, 'a', encoding='utf-8') as out_f, \
          open("error_samples_log_gpt-5-mini.jsonl", 'a', encoding='utf-8') as err_f:

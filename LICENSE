@@ -1,0 +1,59 @@
+MIME — Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition
+Proceedings of the 34th ACM International Conference on Multimedia (ACM MM '26)
+DOI: 10.1145/3767308.3838643
+Project page: https://yuxinokk.github.io/MIME/
+
+This repository contains two kinds of material, released under different terms.
+
+1. Code
+-------
+All source code in this repository (in particular everything under `eval/`) is
+released under the Creative Commons Attribution 4.0 International License
+(CC BY 4.0).
+
+You are free to share and adapt the code for any purpose, including
+commercially, provided that you give appropriate credit, link to the license,
+and indicate if changes were made.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+2. Benchmark data
+-----------------
+The MIME benchmark data (video segments, annotations, Chain-of-Emotion
+reasoning chains) is released for ACADEMIC AND NON-COMMERCIAL RESEARCH USE
+ONLY.
+
+- The sample set distributed in this repository (4 clips per subset, 28 clips
+  in total, plus `label.jsonl`) may be used for research and evaluation, and
+  may be redistributed unmodified together with this notice.
+- Access to the full 2,000-segment benchmark requires a signed copy of
+  `license.pdf`. Requests should be sent to jinj62062@gmail.com, CC
+  lanx@cse.neu.edu.cn.
+- Redistribution, resale, or any commercial use of the full benchmark data is
+  not permitted without written permission from the authors.
+
+The source videos are derived from CAER, DFEW, MAFW, FERV39k and publicly
+available social media videos. Users are responsible for complying with the
+original terms of those source datasets.
+
+3. Citation
+-----------
+If you use MIME in your research, please cite:
+
+@inproceedings{jia2026mime,
+  author    = {Jia, Yuxin and Lan, Xing and Wang, Wensong and Xue, Jian and Ren, Feiliang and Lu, Ke},
+  title     = {Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition},
+  year      = {2026},
+  isbn      = {9798400722134},
+  publisher = {Association for Computing Machinery},
+  booktitle = {Proceedings of the 34th ACM International Conference on Multimedia},
+  pages     = {16784--16791},
+  doi       = {10.1145/3767308.3838643},
+  series    = {MM '26}
+}
+
+4. Contact
+----------
+Yuxin Jia      jiayuxin@mails.neu.edu.cn
+Xing Lan       lanx@cse.neu.edu.cn  (corresponding author)

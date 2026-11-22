@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import cv2
 import base64
@@ -9,18 +9,18 @@ from tqdm import tqdm
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 from collections import defaultdict
 
-# ================= 閰嶇疆鍖?=================
-client = OpenAI(api_key="xxxxx",
+# ================= configuration =================
+client = OpenAI(api_key=os.getenv("DASHSCOPE_API_KEY", "your-key-here"),
                base_url="https://dashscope.aliyuncs.com/compatible-mode/v1") 
 
-# 璺緞閰嶇疆 (閫傞厤鍥句腑鐨勬柊鐩綍缁撴瀯)
-INPUT_JSONL = "label.jsonl"  # 绾噣鐗堝厓鏁版嵁鏂囦欢
-MEDIA_DIR = "data"                # 鍖呭惈 7 涓?Subset 鏂囦欢澶圭殑鏁版嵁鐩綍
+# Path configuration (matches the directory layout shown in the figure)
+INPUT_JSONL = "label.jsonl"  # metadata file
+MEDIA_DIR = "data"  # directory containing the 7 subset folders
 
 NUM_FRAMES = 8 
 EMOTION_CLASSES = ["Happy", "Sad", "Neutral", "Anger", "Disgust", "Fear", "Surprise"]
 
-# 瀹氫箟鎵€鏈夋敮鎸佺殑妯″瀷
+# All supported models
 MODELS = [
     "doubao-seed-2-0-lite",
     "gpt-5-mini",
@@ -35,20 +35,21 @@ DEFAULT_MODEL_CHOICE = "gpt-5-mini"
 # ============================================
 
 def normalize_match_key(name):
-    """璇嶆€у綊涓€鍖?""
+    """Normalize label variants."""
     name = name.lower()
     for old, new in {"angry": "anger", "happiness": "happy", "sadness": "sad"}.items():
         name = name.replace(old, new)
     return name
 
 def find_media_file(video_id):
-    """閬嶅巻瀛愭枃浠跺す瀵绘壘瀵瑰簲濯掍綋鏂囦欢"""
+    """Walk the subset folders and locate the media file."""
     if not video_id or not os.path.exists(MEDIA_DIR): 
         return None, None
         
     safe_vid = normalize_match_key(video_id)
     
-    # 閬嶅巻 data 鐩綍涓嬬殑鍚勪釜 Subset 鏂囦欢澶?    for root, dirs, files in os.walk(MEDIA_DIR):
+    # Walk the subset folders under data/
+    for root, dirs, files in os.walk(MEDIA_DIR):
         for fname in files:
             if fname.startswith('.'): continue
             safe_fname = normalize_match_key(os.path.splitext(fname)[0])
@@ -62,20 +63,20 @@ def find_media_file(video_id):
     return None, None
 
 def get_case_id(item, media_path):
-    """鎻愬彇 Subset ID (1-7)锛屽彲浠?JSON 瀛楁鎴栬矾寰勮В鏋?""
+    """Extract the subset id (1-7) from the JSON field or the file path."""
     if 'case' in item:
         c = str(item['case']).upper()
         for i in range(1, 8):
             if str(i) in c or f"CASE{i}" in c: return i
             
-    # 浠庤矾寰勪腑鎻愬彇 (濡?data/Subset3_FSM/001.avi)
+    # e.g. data/Subset3_FSM/001.avi
     if media_path:
         for i in range(1, 8):
             if f"CASE{i}" in media_path: return i
-    return 1  # 榛樿 Subset 1
+    return 1  # default: subset 1
 
 def generate_prediction(item, model_name):
-    """鐢熸垚涓夋寮忔€濈淮閾?(3-stage CoT)"""
+    """Generate the three-stage CoE reasoning chain."""
     system_prompt = f"""You are an expert in multimodal emotion analysis. 
 Analyze the emotion of the main character based on the provided inputs.
 
@@ -103,7 +104,7 @@ You must strictly output your response in the following JSON format:
     media_path, media_type = find_media_file(video_id)
     case_id = get_case_id(item, media_path)
     
-    # 鏍规嵁 7 绉?Case 鍔ㄦ€佺敓鎴?Prompt 鎻愮ず
+    # Build the prompt for each of the 7 subsets
     hint = ""
     if case_id == 2: hint = " (Note: Face details are missing/blurred, but general structures are visible. You can still use it alongside body and scene.)"
     elif case_id == 3: hint = " (Note: Face structures are heavily missing/blurred. Rely purely on body language, scene, and audio.)"
@@ -118,7 +119,8 @@ You must strictly output your response in the following JSON format:
         for frame in frames:
             content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{frame}"}})
             
-    # 瀵逛簬绾煶棰戠殑 Subset 4锛屾垨鑰呮湁闊抽鎻愬彇鐗瑰緛鐨勬儏鍐?    if case_id in [1, 2, 3, 4] and item.get('stages', {}).get('stage1_extraction'):
+    # Audio-only subset, or records that carry extracted audio features
+    if case_id in [1, 2, 3, 4] and item.get('stages', {}).get('stage1_extraction'):
         audio_features = item['stages']['stage1_extraction']
         content.append({
             "type": "text", 
@@ -178,7 +180,7 @@ def main():
 
     for model_name in models_to_run:
         print("\n" + "="*80)
-        print(f"馃殌 寮€濮嬭瘎浼版ā鍨? {model_name}")
+        print(f"[RUN] Evaluating model: {model_name}")
         print("="*80)
         
         grouped_true, grouped_pred = defaultdict(list), defaultdict(list)
@@ -203,7 +205,7 @@ def main():
                             
                         true_label = data.get('emotion', '').strip().capitalize()
                         pred_label = data.get('pred_label', '')
-                        case_id = data.get('case', 1) # 涔熷彲浠ユ牴鎹渶姹傝鍙?                        
+                        case_id = data.get('case', 1)  # fallback to the record field
                         all_true.append(true_label)
                         all_pred.append(pred_label)
                         grouped_true[case_id].append(true_label)
@@ -230,7 +232,8 @@ def main():
                 
                 pred_cot, pred_label, error_type, error_message = generate_prediction(item, model_name)
                 
-                # 璁板綍璇ユ潯鏁版嵁鐨?Subset ID锛屾柟渚垮悗缁鐞?                media_path, _ = find_media_file(video_id)
+                # Record the subset id for later use
+                media_path, _ = find_media_file(video_id)
                 case_id = get_case_id(item, media_path)
                 item['case'] = case_id
                 
