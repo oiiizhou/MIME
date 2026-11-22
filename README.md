@@ -1,11 +1,21 @@
 ﻿# MIME Benchmark
 
+### Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition
+
+**Official repository of the ACM Multimedia 2026 (ACM MM '26) paper**
+
+[![Paper](https://img.shields.io/badge/Paper-ACM%20MM%202026-6f42c1)](https://doi.org/10.1145/3767308.3838643) [![DOI](https://img.shields.io/badge/DOI-10.1145%2F3767308.3838643-1f6feb)](https://doi.org/10.1145/3767308.3838643) [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-2ea44f)](https://creativecommons.org/licenses/by/4.0/)
+
+<!-- 等 arXiv 公告后，把下一行取消注释并替换 ID，即可显示 arXiv 徽章 -->
+<!-- [![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b?logo=arxiv&logoColor=white)](https://arxiv.org/abs/XXXX.XXXXX) -->
+
 **MIME: A Chain-of-Emotion (CoE) benchmark for incomplete multimodal emotion recognition. It provides structured reasoning annotations to support robust and interpretable emotion understanding when facial, visual, or audio cues are partially unavailable.**
 
-This repository contains the official introduction and code implementation for the paper "**Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition**" (submitted to ACM Multimedia 2026 Benchmark Track).
+This repository contains the official introduction and code implementation for the paper "**Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition**" (accepted to ACM Multimedia 2026).
 
 <p align="center">
   <a href="https://yuxinokk.github.io/MIME/"><b>[HomePage]</b></a> |
+  <a href="https://doi.org/10.1145/3767308.3838643"><b>[Paper]</b></a> |
   <a href="https://drive.google.com/drive/folders/1RgBzBK7UJMWL43hEPQzmZTJtSI7TkHhe?usp=sharing"><b>[Dataset]</b></a> |
   <a href="./license.pdf"><b>[License]</b></a> |
   <a href="./supplementary_material.pdf"><b>[Appendix]</b></a>
@@ -14,6 +24,7 @@ This repository contains the official introduction and code implementation for t
 ---
 
 ## News
+* **[2026.11]** MIME is accepted to **ACM Multimedia 2026 (ACM MM '26)**. Paper: [10.1145/3767308.3838643](https://doi.org/10.1145/3767308.3838643).
 * **[2026.04]** The MIME benchmark repository is created for ACM Multimedia 2026. Mini data and code will be updated continuously.
 
 ## About MIME
@@ -66,6 +77,29 @@ We provide tools in the `eval/` directory to assess both classification performa
 
 ## Availability
 The benchmark can be accessed in two ways. To quickly preview it, you can directly download a small sample set containing 4 videos per subset (28 videos in total). To use the full benchmark, please sign `license.pdf` and send it to `jinj62062@gmail.com` (CC: `lanx@cse.neu.edu.cn`).
+
+## Citation
+
+If you find MIME useful in your research, please cite our paper:
+
+```bibtex
+@inproceedings{jia2026mime,
+  author    = {Jia, Yuxin and Lan, Xing and Wang, Wensong and Xue, Jian and Ren, Feiliang and Lu, Ke},
+  title     = {Face Is Not All You Need: MIME Benchmark for Incomplete Multimodal Emotion Recognition},
+  year      = {2026},
+  isbn      = {9798400722134},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3767308.3838643},
+  doi       = {10.1145/3767308.3838643},
+  booktitle = {Proceedings of the 34th ACM International Conference on Multimedia},
+  pages     = {16784--16791},
+  numpages  = {8},
+  keywords  = {incomplete multimodal emotion recognition, multimodal large language models, benchmark, chain of emotion, emotion recognition},
+  location  = {Rio de Janeiro, Brazil},
+  series    = {MM '26}
+}
+```
 
 ## License
 The benchmark and code in this repository are released under the Creative Commons Attribution 4.0 International (CC BY 4.0) license. See `license.pdf` for the uploaded license document.
