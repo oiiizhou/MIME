@@ -199,10 +199,19 @@ This release is intended to support readers who want concrete examples of the ki
 
 ## Availability
 
-The benchmark can be accessed in two ways:
+The benchmark can be accessed in either of two ways. Both give the same 2,000-segment
+release under the same terms.
 
-- **Sample set (no registration).** 4 videos per subset (28 videos in total) are released directly in `data/`, together with `label.jsonl`.
-- **Full benchmark (2,000 segments).** Sign `license.pdf` and send the signed file to `jinj62062@gmail.com`, CC `lanx@cse.neu.edu.cn`.
+- **Hugging Face (recommended).** Request access at
+  https://huggingface.co/datasets/yuxinokk/MIME and accept the release agreement in the
+  form. Requests are reviewed manually and usually approved within a day.
+- **By email.** Sign `license.pdf` and send it to `jiayuxin@mails.neu.edu.cn`, CC
+  `lanx@cse.neu.edu.cn`. We will reply with a Google Drive link to the full release.
+
+A **28-clip sample set** (4 per subset) is released directly in `data/`, together with
+`label.jsonl`, and needs no registration. A browsable copy is on
+[Google Drive](https://drive.google.com/drive/folders/1RgBzBK7UJMWL43hEPQzmZTJtSI7TkHhe?usp=sharing).
+
 
 ## Citation
 
@@ -230,6 +239,6 @@ If you find MIME useful in your research, please cite our paper:
 ## License
 
 - **Code** (everything under `eval/`) is released under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) license.
-- **Benchmark data** is released for **academic and non-commercial research only**. Access to the full 2,000-segment set requires a signed `license.pdf`; redistribution is not permitted.
+- **Benchmark data** is released for **academic and non-commercial research only**. Access to the full 2,000-segment set requires accepting the release agreement — either by signing `license.pdf` and emailing it to us, or by submitting the access form on [Hugging Face](https://huggingface.co/datasets/yuxinokk/MIME). Redistribution is not permitted.
 
 See [`LICENSE`](./LICENSE) and [`license.pdf`](./license.pdf) for details.
